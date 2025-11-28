@@ -3,6 +3,9 @@ bin/
 obj/
 publish/
 
+# Generated docs
+*.docx
+
 # IDE
 .vs/
 .vscode/
