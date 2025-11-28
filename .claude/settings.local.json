@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet new:*)",
+      "Bash(dotnet sln:*)",
+      "Bash(dotnet add:*)",
+      "Bash(Remove-Item C:unsubGmailUnsubscriber.CoreClass1.cs -ErrorAction SilentlyContinue)",
+      "Bash(Remove-Item C:unsubGmailUnsubscriber.InfrastructureClass1.cs -ErrorAction SilentlyContinue)",
+      "Bash(dotnet build:*)",
+      "Bash(dotnet restore:*)",
+      "Bash(dotnet test:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
