@@ -2,6 +2,8 @@
 
 A command-line tool that automatically unsubscribes you from unwanted email lists by processing emails you've labeled for removal.
 
+> **Note:** I didn't go through Google's app verification process to make this a "trusted" app - so here's the source code instead. It takes about 5 minutes to set up your own Google Cloud project. Then just create an "unsubscribe" label in Gmail, apply it to emails you're sick of getting, and run the tool.
+
 ## How It Works
 
 1. You label emails in Gmail with "unsubscribe"
