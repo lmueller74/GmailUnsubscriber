@@ -11,13 +11,6 @@ A command-line tool that automatically unsubscribes you from unwanted email list
 5. Moves processed emails to "Unsubscribed" label
 6. Failed emails go to "unsubscribe-failed" for manual review
 
-## Two Modes
-
-| Mode | Description |
-|------|-------------|
-| **Marked** (default) | Only processes emails YOU labeled "unsubscribe" |
-| **Nuke** | Processes ALL inbox emails containing "unsubscribe" (use with caution!) |
-
 ## Prerequisites
 
 - Windows 10/11
@@ -29,7 +22,7 @@ A command-line tool that automatically unsubscribes you from unwanted email list
 ### Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/GmailUnsubscriber.git
+git clone https://github.com/lmueller74/GmailUnsubscriber.git
 cd GmailUnsubscriber
 ```
 
@@ -114,29 +107,14 @@ Your authorization token is saved locally at:
 2. Apply the "unsubscribe" label
 3. Run the tool
 
-### Running in Different Modes
-
-```bash
-# Default: Process only emails labeled "unsubscribe"
-dotnet run
-
-# Or explicitly:
-dotnet run -- --marked
-
-# DANGER: Process ALL inbox emails with unsubscribe links
-dotnet run -- --nuke
-```
-
 ### Configuration
 
 Edit `appsettings.json` to customize:
 
 ```json
 {
-  "Mode": "marked",
-  "MarkedQuery": "label:unsubscribe",
+  "SearchQuery": "label:unsubscribe",
   "SourceLabel": "unsubscribe",
-  "NukeQuery": "label:inbox \"unsubscribe\"",
   "ProcessedLabel": "Unsubscribed",
   "FailedLabel": "unsubscribe-failed",
   "MaxMessagesPerRun": 500
@@ -145,9 +123,8 @@ Edit `appsettings.json` to customize:
 
 | Setting | Description |
 |---------|-------------|
-| `Mode` | `marked` or `nuke` |
-| `MarkedQuery` | Gmail search query for marked mode |
-| `SourceLabel` | Label to look for and remove after processing |
+| `SearchQuery` | Gmail search query to find emails to process |
+| `SourceLabel` | Label to remove after processing |
 | `ProcessedLabel` | Label applied to successfully unsubscribed emails |
 | `FailedLabel` | Label applied to emails that couldn't be processed |
 | `MaxMessagesPerRun` | Maximum emails to process per run |

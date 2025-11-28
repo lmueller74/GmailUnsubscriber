@@ -20,15 +20,6 @@ class Program
 
         var settings = configuration.Get<AppSettings>() ?? new AppSettings();
 
-        // Command-line override: --nuke or --marked
-        if (args.Contains("--nuke", StringComparer.OrdinalIgnoreCase))
-            settings.Mode = "nuke";
-        else if (args.Contains("--marked", StringComparer.OrdinalIgnoreCase))
-            settings.Mode = "marked";
-
-        var isNukeMode = settings.Mode.Equals("nuke", StringComparison.OrdinalIgnoreCase);
-        var activeQuery = settings.GetActiveQuery();
-
         using var loggerFactory = LoggerFactory.Create(builder =>
         {
             builder
@@ -38,33 +29,8 @@ class Program
 
         var logger = loggerFactory.CreateLogger<Program>();
 
-        // Display mode
-        if (isNukeMode)
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("*** NUKE MODE ***");
-            Console.WriteLine("This will unsubscribe from ALL emails containing 'unsubscribe' in your inbox!");
-            Console.ResetColor();
-            Console.Write("\nAre you sure? (yes/no): ");
-            var confirm = Console.ReadLine();
-            if (!confirm?.Equals("yes", StringComparison.OrdinalIgnoreCase) ?? true)
-            {
-                Console.WriteLine("Aborted.");
-                return;
-            }
-            Console.WriteLine();
-        }
-        else
-        {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("MARKED MODE - Processing only emails labeled 'unsubscribe'");
-            Console.ResetColor();
-            Console.WriteLine();
-        }
-
         logger.LogInformation("Starting Gmail Unsubscriber");
-        logger.LogInformation("Mode: {Mode}", settings.Mode.ToUpper());
-        logger.LogInformation("Search Query: {Query}", activeQuery);
+        logger.LogInformation("Search Query: {Query}", settings.SearchQuery);
         logger.LogInformation("Processed Label: {Label}", settings.ProcessedLabel);
         logger.LogInformation("Max Messages Per Run: {Max}", settings.MaxMessagesPerRun);
 
@@ -102,7 +68,7 @@ class Program
 
         Console.WriteLine("\nSearching for messages...\n");
 
-        var messages = await gmailClient.SearchAsync(activeQuery, settings.MaxMessagesPerRun);
+        var messages = await gmailClient.SearchAsync(settings.SearchQuery, settings.MaxMessagesPerRun);
 
         foreach (var msg in messages)
         {
@@ -115,14 +81,8 @@ class Program
             if (info == null)
             {
                 Console.WriteLine($"  No unsubscribe info found - marking as failed");
-
-                // Mark as failed and remove source label
-                if (!isNukeMode && !string.IsNullOrEmpty(settings.SourceLabel))
-                {
-                    await gmailClient.ApplyLabelAsync(msg.Id, settings.FailedLabel);
-                    await gmailClient.RemoveLabelAsync(msg.Id, settings.SourceLabel);
-                }
-
+                await gmailClient.ApplyLabelAsync(msg.Id, settings.FailedLabel);
+                await gmailClient.RemoveLabelAsync(msg.Id, settings.SourceLabel);
                 Console.WriteLine();
                 continue;
             }
@@ -138,24 +98,14 @@ class Program
             {
                 await gmailClient.ApplyLabelAsync(msg.Id, settings.ProcessedLabel);
                 await gmailClient.RemoveFromInboxAsync(msg.Id);
-
-                // In marked mode, remove the source label so it won't be picked up again
-                if (!isNukeMode && !string.IsNullOrEmpty(settings.SourceLabel))
-                {
-                    await gmailClient.RemoveLabelAsync(msg.Id, settings.SourceLabel);
-                }
-
+                await gmailClient.RemoveLabelAsync(msg.Id, settings.SourceLabel);
                 Console.WriteLine($"  Labeled as '{settings.ProcessedLabel}' and archived");
             }
             else
             {
-                // Mark as failed and remove source label
-                if (!isNukeMode && !string.IsNullOrEmpty(settings.SourceLabel))
-                {
-                    await gmailClient.ApplyLabelAsync(msg.Id, settings.FailedLabel);
-                    await gmailClient.RemoveLabelAsync(msg.Id, settings.SourceLabel);
-                    Console.WriteLine($"  Labeled as '{settings.FailedLabel}'");
-                }
+                await gmailClient.ApplyLabelAsync(msg.Id, settings.FailedLabel);
+                await gmailClient.RemoveLabelAsync(msg.Id, settings.SourceLabel);
+                Console.WriteLine($"  Labeled as '{settings.FailedLabel}'");
             }
 
             Console.WriteLine();
