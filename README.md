@@ -168,6 +168,10 @@ Remove-Item -Recurse "$env:LOCALAPPDATA\GmailUnsubscriber.Auth"
 dotnet run
 ```
 
+## Documentation
+
+- [Technical Specification](TECHNICAL_SPECIFICATION.md) - Architecture, models, services, and implementation details
+
 ## Security Notes
 
 - Your OAuth token is stored locally on your machine only

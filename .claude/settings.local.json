@@ -11,7 +11,9 @@
       "Bash(dotnet test:*)",
       "Bash(git commit:*)",
       "Bash(git push:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(C:/intranet/pandoc -f markdown -t docx C:/unsub/TECHNICAL_SPECIFICATION.md -o C:/unsub/TECHNICAL_SPECIFICATION.docx)",
+      "Bash(/c/intranet/pandoc-temp/pandoc-2.19.2/pandoc.exe:*)"
     ],
     "deny": [],
     "ask": []
