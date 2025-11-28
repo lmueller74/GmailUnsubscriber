@@ -137,7 +137,7 @@ Edit `appsettings.json` to customize:
   "MarkedQuery": "label:unsubscribe",
   "SourceLabel": "unsubscribe",
   "NukeQuery": "label:inbox \"unsubscribe\"",
-  "LabelName": "Unsubscribed",
+  "ProcessedLabel": "Unsubscribed",
   "FailedLabel": "unsubscribe-failed",
   "MaxMessagesPerRun": 500
 }
@@ -148,7 +148,7 @@ Edit `appsettings.json` to customize:
 | `Mode` | `marked` or `nuke` |
 | `MarkedQuery` | Gmail search query for marked mode |
 | `SourceLabel` | Label to look for and remove after processing |
-| `LabelName` | Label applied to successfully unsubscribed emails |
+| `ProcessedLabel` | Label applied to successfully unsubscribed emails |
 | `FailedLabel` | Label applied to emails that couldn't be processed |
 | `MaxMessagesPerRun` | Maximum emails to process per run |
 

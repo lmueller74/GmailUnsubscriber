@@ -65,7 +65,7 @@ class Program
         logger.LogInformation("Starting Gmail Unsubscriber");
         logger.LogInformation("Mode: {Mode}", settings.Mode.ToUpper());
         logger.LogInformation("Search Query: {Query}", activeQuery);
-        logger.LogInformation("Label Name: {Label}", settings.LabelName);
+        logger.LogInformation("Processed Label: {Label}", settings.ProcessedLabel);
         logger.LogInformation("Max Messages Per Run: {Max}", settings.MaxMessagesPerRun);
 
         var credentialsPath = Path.Combine(Directory.GetCurrentDirectory(), "credentials.json");
@@ -136,7 +136,7 @@ class Program
 
             if (success)
             {
-                await gmailClient.ApplyLabelAsync(msg.Id, settings.LabelName);
+                await gmailClient.ApplyLabelAsync(msg.Id, settings.ProcessedLabel);
                 await gmailClient.RemoveFromInboxAsync(msg.Id);
 
                 // In marked mode, remove the source label so it won't be picked up again
@@ -145,7 +145,7 @@ class Program
                     await gmailClient.RemoveLabelAsync(msg.Id, settings.SourceLabel);
                 }
 
-                Console.WriteLine($"  Labeled as '{settings.LabelName}' and archived");
+                Console.WriteLine($"  Labeled as '{settings.ProcessedLabel}' and archived");
             }
             else
             {

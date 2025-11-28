@@ -6,7 +6,7 @@ public class AppSettings
     public string MarkedQuery { get; set; } = "label:unsubscribe";
     public string SourceLabel { get; set; } = "unsubscribe";
     public string NukeQuery { get; set; } = "label:inbox \"unsubscribe\"";
-    public string LabelName { get; set; } = "Unsubscribed";
+    public string ProcessedLabel { get; set; } = "Unsubscribed";
     public string FailedLabel { get; set; } = "unsubscribe-failed";
     public int MaxMessagesPerRun { get; set; } = 5;
 
